@@ -18,8 +18,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     const result = await model.generateContent(query);
-    const text = result.response.text();
-    const sources = result.response.candidates?.[0]?.groundingMetadata?.groundingChunks?.filter(c => c.web) || [];
+    const text = await result.response.text(); // <--- FIX QUI
+    const sources =
+      result.response.candidates?.[0]?.groundingMetadata?.groundingChunks?.filter(c => c.web) || [];
 
     return res.status(200).json({ text, sources });
 
