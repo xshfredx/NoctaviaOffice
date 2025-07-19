@@ -23,14 +23,12 @@ const Browser: React.FC = () => {
         if (!query.trim() || loading) return;
 
         const apiKey = import.meta.env.VITE_API_KEY;
-const apiKey = import.meta.env.VITE_API_KEY;
-if (!apiKey) {
-    setError("VITE_API_KEY environment variable not found.");
-    return;
-}
+        if (!apiKey) {
+            setError("VITE_API_KEY environment variable not found.");
+            return;
+        }
 
-const ai = new GoogleGenAI({ apiKey });
-
+        const ai = new GoogleGenAI({ apiKey });
 
         setLoading(true);
         setError(null);
@@ -65,7 +63,7 @@ const ai = new GoogleGenAI({ apiKey });
             handleSearch();
         }
     };
-    
+
     return (
         <div className="w-full h-full p-2 sm:p-4 flex flex-col bg-black text-orange-500">
             {/* Header */}
