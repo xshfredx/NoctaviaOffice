@@ -8,15 +8,15 @@
     "build": "vite build",
     "preview": "vite preview"
   },
-  "dependencies": {
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "three": "^0.178.0",
-    "@google/genai": "latest",
-  },
-  "devDependencies": {
-    "@types/node": "^22.14.0",
-    "typescript": "~5.7.2",
-    "vite": "^6.2.0"
-  }
+ "dependencies": {
+  "react": "^19.1.0",
+  "react-dom": "^19.1.0",
+  "three": "^0.178.0",
+  "@google/genai": "latest"
+},
+"devDependencies": {
+  "@types/node": "^22.14.0",
+  "typescript": "^5.7.2",
+  "vite": "^6.2.0"
+}
 }
