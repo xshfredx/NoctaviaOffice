@@ -22,12 +22,13 @@ const Browser: React.FC = () => {
     const handleSearch = useCallback(async () => {
         if (!query.trim() || loading) return;
 
-        if (!process.env.API_KEY) {
-            setError("API_KEY environment variable not found.");
-            return;
-        }
+        const apiKey = import.meta.env.VITE_API_KEY;
+if (!apiKey) {
+    setError("VITE_API_KEY environment variable not found.");
+    return;
+}
+const ai = new GoogleGenAI({ apiKey });
 
-        const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
         setLoading(true);
         setError(null);
