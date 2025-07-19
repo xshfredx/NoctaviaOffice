@@ -1,13 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-const apiKey = process.env.GOOGLE_API_KEY!;
-const genAI = new GoogleGenerativeAI(apiKey);
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY!);
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
 
   const { query } = req.body || {};
   if (!query) return res.status(400).json({ error: 'Missing query' });
@@ -15,7 +14,7 @@ export default async function handler(
   try {
     const model = genAI.getGenerativeModel({
       model: 'gemini-1.5-flash',
-      tools: [{ type: 'retrieval_tool' }], // <-- optional if you want sources
+      // tools: [{ type: 'retrieval_tool' }] ❌ NON SUPPORTATO
     });
 
     const result = await model.generateContent(query);
