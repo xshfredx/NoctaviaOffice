@@ -13,9 +13,6 @@
     "react-dom": "^19.1.0",
     "three": "^0.178.0",
     "@google/genai": "latest",
-    "three/addons/loaders/GLTFLoader.js": "latest",
-    "three/addons/controls/OrbitControls.js": "latest",
-    "three/addons/loaders/DRACOLoader.js": "latest"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
