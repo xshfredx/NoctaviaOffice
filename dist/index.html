@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>memetavia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+
+<style>
+  html, body, #root {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="5" fill="%23f97316" stroke="black" stroke-width="1"/></svg>') 8 8, auto;
+  }
+  body {
+    font-family: 'VT323', monospace;
+    background-color: #0c0c0c;
+    color: #f97316; /* Tailwind orange-500 */
+    overflow: hidden;
+  }
+  body.os-active {
+    transition: background-color 0.5s ease;
+  }
+  body.os-active::after { /* Scanlines */
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0,0,0,0.35),
+        rgba(0,0,0,0.35) 1px,
+        transparent 1px,
+        transparent 2px
+    );
+    pointer-events: none;
+    z-index: 9998; /* Below noise */
+  }
+  .os-active #noise-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.08;
+    animation: noise-anim 1s steps(4) infinite;
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyBAMAAADsEZWCAAAAGFBMVEX///8zMzMyMjIwMDAxMTEvLy8hISEgICDU48xWAAAACHRSTlMAAQ4iRBslp+M+0AAAANBJREFUKM+10EsOwCAIBVC4z/5/TqfYQkFB4sVn2eAbYkBLNRAwEAwYqAUM9E205VwzM0m1mnn7tGzB5i4ARjYdi2puQj/8wBCsQBEiwBGgQgqkQAoUIIEKpEAGZEAGZEAG5ECG5EAG5EAIpEAGJBHi4gAS4uQAkIRHiJEAGRFGgBEhAhGhAhChAhChAhChARFhARFhAhFBchGByhEBylGBylGByhGByhGByhGByhGByhGByhGByhGByhGByhGByhGByhGAiBEAiBEAiBEAiBEA+B8i8A6SA/gCSAQG1LzFfAAAAAElFTkSuQmCC');
+  }
+  @keyframes noise-anim {
+    0% { transform: translate(0,0) }
+    25% { transform: translate(-2%, 3%) }
+    50% { transform: translate(2%, -3%) }
+    75% { transform: translate(3%, 2%) }
+    100% { transform: translate(-3%, -2%) }
+  }
+  .text-glow {
+    text-shadow: 0 0 4px #f97316, 0 0 8px #f97316;
+  }
+  .backdrop-blur-sm {
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  .fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+  @keyframes blink {
+      50% { opacity: 0; }
+  }
+  .blink {
+      animation: blink 1.5s linear infinite;
+  }
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+    width: 100%;
+  }
+  input[type="range"]::-webkit-slider-runnable-track {
+    background: #4a5568; /* gray-700 */
+    height: 0.25rem;
+  }
+  input[type="range"]::-moz-range-track {
+    background: #4a5568;
+    height: 0.25rem;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    margin-top: -6px;
+    background-color: #f97316; /* orange-500 */
+    height: 1rem;
+    width: 0.5rem;
+  }
+    input[type="range"]::-moz-range-thumb {
+    border: none;
+    border-radius: 0;
+    background-color: #f97316;
+    height: 1rem;
+    width: 0.5rem;
+  }
+
+  /* --- Custom Cursors --- */
+  .cursor-grab {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="5" fill="%23f97316" stroke="black" stroke-width="1"/></svg>') 8 8, grab;
+  }
+  .cursor-grab:active {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="%23f97316" stroke="black" stroke-width="1"/></svg>') 8 8, grabbing;
+  }
+  .cursor-pointer, button, a {
+     cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="5" fill="%23f97316" stroke="white" stroke-width="1"/></svg>') 8 8, pointer;
+  }
+  /* --- End Custom Cursors --- */
+
+  @keyframes marquee {
+    0%   { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+  }
+  .marquee span {
+    display: inline-block;
+    padding-left: 100%;
+    animation: marquee 10s linear infinite;
+    animation-play-state: running;
+  }
+  .marquee.paused span {
+    animation-play-state: paused;
+  }
+  .marquee {
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .sound-wave {
+    gap: 2px;
+  }
+  .sound-wave span {
+    display: block;
+    height: 100%;
+    transform-origin: bottom;
+    animation: wave 1.2s infinite ease-in-out;
+    transform: scaleY(0.1);
+  }
+  .sound-wave.paused span {
+    animation-play-state: paused;
+    transform: scaleY(0.1);
+  }
+  @keyframes wave {
+    0%, 100% { transform: scaleY(0.1); }
+    50% { transform: scaleY(1); }
+  }
+</style>
+<link rel="stylesheet" href="/index.css">
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.1.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.1.0/",
+    "react/": "https://esm.sh/react@^19.1.0/",
+    "three": "https://esm.sh/three@^0.178.0",
+    "three/": "https://esm.sh/three@^0.178.0/",
+    "@google/genai": "https://esm.sh/@google/genai",
+    "three/addons/loaders/GLTFLoader.js": "https://esm.sh/three@^0.178.0/examples/jsm/loaders/GLTFLoader.js",
+    "three/addons/controls/OrbitControls.js": "https://esm.sh/three@^0.178.0/examples/jsm/controls/OrbitControls.js",
+    "three/addons/loaders/DRACOLoader.js": "https://esm.sh/three@^0.178.0/examples/jsm/loaders/DRACOLoader.js"
+  }
+}
+</script>
+  <script type="module" crossorigin src="/assets/index-Cg_Jw8z9.js"></script>
+</head>
+  <body class="bg-black text-white overflow-hidden">
+    <div id="noise-overlay"></div>
+    <div id="root"></div>
+  </body>
+</html>
