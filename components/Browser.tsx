@@ -26,30 +26,40 @@ const Browser: React.FC = () => {
     setResults(null);
 
     try {
-      const res = await fetch('/api/search', {
+      const response = await fetch('/api/search', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query })
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ query }),
       });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Unknown error');
+      const data = await response.json();
 
-      setResults({ text: data.text, sources: data.sources });
-    } catch (e: any) {
-      setError(`Failed to fetch results: ${e.message}`);
+      if (!response.ok) {
+        throw new Error(data.error || 'Unknown server error');
+      }
+
+      setResults({
+        text: data.text,
+        sources: data.sources || [],
+      });
+    } catch (e) {
+      const message = e instanceof Error ? e.message : 'Unknown error';
+      setError(`Failed to fetch results: ${message}`);
     } finally {
       setLoading(false);
     }
   }, [query, loading]);
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') handleSearch();
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
   };
 
   return (
     <div className="w-full h-full p-2 sm:p-4 flex flex-col bg-black text-orange-500">
-      {/* Header */}
       <div className="flex-shrink-0 flex items-center gap-2 mb-4 p-2 border-2 border-orange-800 bg-black">
         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -63,8 +73,8 @@ const Browser: React.FC = () => {
           className="flex-grow bg-black text-orange-400 text-lg placeholder-gray-600 focus:outline-none px-2"
           disabled={loading}
         />
-        <button 
-          onClick={handleSearch} 
+        <button
+          onClick={handleSearch}
           disabled={loading || !query.trim()}
           className="px-4 py-1 bg-black text-orange-500 border border-orange-500 hover:bg-orange-500 hover:text-black transition-colors duration-200 uppercase text-lg text-glow disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-black disabled:hover:text-orange-500"
         >
@@ -72,7 +82,6 @@ const Browser: React.FC = () => {
         </button>
       </div>
 
-      {/* Content */}
       <div className="flex-grow border-2 border-orange-500 p-4 overflow-y-auto bg-black">
         {loading && (
           <div className="flex justify-center items-center h-full">
@@ -96,7 +105,12 @@ const Browser: React.FC = () => {
                 <ul className="space-y-2 list-decimal list-inside">
                   {results.sources.map((source, index) => (
                     <li key={index} className="truncate">
-                      <a href={source.web.uri} target="_blank" rel="noopener noreferrer" className="text-orange-400 hover:text-white hover:underline transition-colors">
+                      <a
+                        href={source.web.uri}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-orange-400 hover:text-white hover:underline transition-colors"
+                      >
                         {source.web.title || source.web.uri}
                       </a>
                     </li>
@@ -108,7 +122,9 @@ const Browser: React.FC = () => {
         )}
         {!loading && !error && !results && (
           <div className="flex flex-col justify-center items-center h-full text-center">
-            <h1 className="text-6xl font-bold text-glow" style={{ fontVariant: 'small-caps' }}>Googlavia</h1>
+            <h1 className="text-6xl font-bold text-glow" style={{ fontVariant: 'small-caps' }}>
+              Googlavia
+            </h1>
             <p className="text-gray-500 mt-2 text-lg">Your portal to the digital sea.</p>
           </div>
         )}
