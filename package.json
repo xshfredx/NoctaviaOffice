@@ -7,11 +7,14 @@
     "build": "vite build",
     "preview": "vite preview"
   },
-  "dependencies": {
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "three": "^0.178.0",
-    "@google/genai": "latest"
+ "dependencies": {
+  "react": "^19.1.0",
+  "react-dom": "^19.1.0",
+  "three": "^0.178.0",
+  "three-stdlib": "2.21.4",
+  "@google/genai": "latest"
+}
+
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.0.0",
