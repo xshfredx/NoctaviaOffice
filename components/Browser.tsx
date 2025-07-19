@@ -23,10 +23,12 @@ const Browser: React.FC = () => {
         if (!query.trim() || loading) return;
 
         const apiKey = import.meta.env.VITE_API_KEY;
+const apiKey = import.meta.env.VITE_API_KEY;
 if (!apiKey) {
     setError("VITE_API_KEY environment variable not found.");
     return;
 }
+
 const ai = new GoogleGenAI({ apiKey });
 
 
