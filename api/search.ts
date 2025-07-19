@@ -1,34 +1,35 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY!);
-
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: Request): Promise<Response> {
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
+      status: 405,
+    });
   }
 
-  const { query } = req.body || {};
-  if (!query) return res.status(400).json({ error: 'Missing query' });
+  const { query } = await req.json();
+  if (!query) {
+    return new Response(JSON.stringify({ error: 'Missing query' }), {
+      status: 400,
+    });
+  }
+
+  const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY!);
 
   try {
-    const model = genAI.getGenerativeModel({
-      model: 'gemini-1.5-flash',
-      // tools: [{ type: 'retrieval_tool' }] ❌ NON SUPPORTATO
-    });
-
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
     const result = await model.generateContent(query);
     const text = await result.response.text();
 
     const sources =
       result.response.candidates?.[0]?.groundingMetadata?.groundingChunks?.filter((c: any) => c.web) || [];
 
-    res.status(200).json({
-      text,
-      sources: sources.map((c: any) => c.web),
-    });
+    return new Response(
+      JSON.stringify({
+        text,
+        sources: sources.map((c: any) => c.web),
+      }),
+      { status: 200, headers: { 'Content-Type': 'application/json' } }
+    );
   } catch (err: any) {
-    console.error('[Googlavia Error]', err);
-    res.status(500).json({ error: err.message || 'Internal Server Error' });
-  }
-}
+    console.error('[Googlavia Erro]()
