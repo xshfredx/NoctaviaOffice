@@ -1,8 +1,9 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import * as THREE from 'three';
-import { GLTFLoader } from './GLTFLoader.js';
-import { OrbitControls } from './OrbitControls.js';
-import { DRACOLoader } from './DRACOLoader.js';
+import { GLTFLoader } from '../GLTFLoader.js';
+import { OrbitControls } from '../OrbitControls.js';
+import { DRACOLoader } from '../DRACOLoader.js';
+
 
 const noctaviaLogoLines = `NNNNNNNN        NNNNNNNN
 N:::::::N       N::::::N
